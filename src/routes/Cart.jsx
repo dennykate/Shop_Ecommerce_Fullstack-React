@@ -15,7 +15,7 @@ const Cart = () => {
       {showCheckout ? (
         <button
           className="w-[40px] h-[40px] bg-[#0858f7] absolute top-[5px] right-0
-      flex justify-center items-center rounded-tl-[20px] rounded-bl-[20px] pl-[5px] md:hidden"
+      flex justify-center items-center rounded-tl-[20px] rounded-bl-[20px] pl-[5px] md:hidden "
           onClick={() => setShowCheckout(false)}
         >
           <HiOutlineXMark size={22} color="white" />
