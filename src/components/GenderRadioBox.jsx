@@ -1,6 +1,6 @@
 import React from "react";
 
-const GenderRadioBox = () => {
+const GenderRadioBox = ({ setValue }) => {
   return (
     <div className="w-full">
       <h1 className="font-shippori text-black text-sm font-semibold">Gender</h1>
@@ -10,7 +10,9 @@ const GenderRadioBox = () => {
             name="gender"
             type="radio"
             id="male"
+            value="male"
             className="sm:w-[18px] sm:h-[18px] w-[15px] h-[15px] accent-green-600"
+            onChange={(e) => setValue(e.target.value)}
           />
           <label
             htmlFor="male"
@@ -24,7 +26,9 @@ const GenderRadioBox = () => {
             name="gender"
             type="radio"
             id="female"
+            value="female"
             className="sm:w-[18px] sm:h-[18px] w-[15px] h-[15px] accent-green-600"
+            onChange={(e) => setValue(e.target.value)}
           />
           <label
             htmlFor="female"
@@ -38,7 +42,9 @@ const GenderRadioBox = () => {
             name="gender"
             type="radio"
             id="undiscolsed"
+            value="undiscolsed"
             className="sm:w-[18px] sm:h-[18px] w-[15px] h-[15px] accent-green-600"
+            onChange={(e) => setValue(e.target.value)}
           />
           <label
             htmlFor="undiscolsed"

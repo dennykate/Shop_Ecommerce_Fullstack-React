@@ -1,22 +1,56 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { BsPlusLg } from "react-icons/bs";
 import { FaHome } from "react-icons/fa";
 import { HiMinus } from "react-icons/hi";
 import { Link } from "react-router-dom";
+import Alert from "./Alert";
 
-const RightDetailBody = ({ detailBodyData }) => {
-  const { title, price, style, material, customized, type } = detailBodyData;
+const RightDetailBody = ({ productData }) => {
+  const dispatch = useDispatch();
+  const { _id, title, price, style, material, customized, type } = productData;
 
-  const [count, setCount] = useState(0);
+  const [show, setShow] = useState(false);
+  const [alerttitle, setTitle] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [quantity, setQuantity] = useState(0);
 
   const handleAdd = () => {
-    setCount((prev) => prev + 1);
+    setQuantity((prev) => prev + 1);
   };
 
   const handleSubstract = () => {
-    if (count <= 0) return;
-    setCount((prev) => prev - 1);
+    if (quantity <= 0) return;
+    setQuantity((prev) => prev - 1);
+  };
+
+  const handleAddToCart = () => {
+    if (quantity == 0) {
+      failAddToCart();
+      return;
+    }
+    dispatch({
+      type: "Add Data",
+      payload: {
+        id: _id,
+        quantity: quantity,
+        data: productData,
+        cost: quantity * price,
+      },
+    });
+    setQuantity(0);
+  };
+
+  const failAddToCart = () => {
+    setShow(true);
+    setTitle("Quantity cann't zero");
+    setIsSuccess(false);
+
+    setTimeout(() => {
+      setShow(false);
+    }, 3000);
   };
 
   return (
@@ -87,7 +121,7 @@ const RightDetailBody = ({ detailBodyData }) => {
               className="w-[40px] h-full flex justify-center items-center font-shippori text-lg 
               text-black font-medium"
             >
-              {count}
+              {quantity}
             </div>
 
             <button
@@ -99,6 +133,7 @@ const RightDetailBody = ({ detailBodyData }) => {
             </button>
           </div>
           <button
+            onClick={handleAddToCart}
             className="sm:w-[160px] w-full h-[40px] bg-black flex justify-center items-center uppercase text-white
             sm:hover:opacity-100 sm:opacity-80 font-shippori text-xs"
           >
@@ -116,6 +151,8 @@ const RightDetailBody = ({ detailBodyData }) => {
           <FaHome size={18} />
         </button>
       </Link>
+
+      <Alert show={show} title={alerttitle} isSuccess={isSuccess} />
     </div>
   );
 };

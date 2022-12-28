@@ -1,9 +1,71 @@
-import React from "react";
+import React, { useState } from "react";
+
 import { FaGoogle, FaFacebook, FaTwitter, FaHome } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { Input } from "../components";
+import { Link, useNavigate } from "react-router-dom";
+import { Input, Loading } from "../components";
+import { Alert } from "../components";
+
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [show, setShow] = useState(false);
+  const [title, setTitle] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert("required all data");
+      return;
+    }
+    const body = { email: email, password: password };
+
+    const response = await fetch(BASE_URL + "user/login", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    const data = await response.json();
+    console.log(data);
+    if (data.message == "wrong information") {
+      authFail();
+    } else if (data.message == "login successfull") {
+      authSuccess(data.data);
+    }
+  };
+
+  const authFail = () => {
+    setShow(true);
+    setTitle("Login Fail");
+    setIsSuccess(false);
+
+    setTimeout(() => {
+      setShow(false);
+    }, 3000);
+  };
+
+  const authSuccess = (data) => {
+    localStorage.setItem("userData", JSON.stringify(data[0]));
+    setShow(true);
+    setTitle("Login Success");
+    setIsSuccess(true);
+    setShowLoading(true);
+
+    setTimeout(() => {
+      setShow(false);
+    }, 3000);
+
+    setTimeout(() => {
+      navigate("/");
+      setShowLoading(false);
+    }, 3500);
+  };
+
   return (
     <div className="min-h-screen py-[20px] bg-[#f1f1f3]">
       <div className="w-full flex flex-col items-center">
@@ -15,8 +77,19 @@ const Login = () => {
         </h1>
       </div>
       <div className="my-[20px] max-w-[500px] sm:p-[30px] p-[5px] py-[30px] bg-white mx-auto shadow-sm">
-        <Input label="Email Address" className="w-full mb-[10px]" />
-        <Input label="Password" className="w-full mb-[10px]" type />
+        <Input
+          label="Email Address"
+          className="w-full mb-[10px]"
+          value={email}
+          setValue={setEmail}
+        />
+        <Input
+          label="Password"
+          className="w-full mb-[10px]"
+          type
+          value={password}
+          setValue={setPassword}
+        />
 
         <div className="flex justify-between items-end mb-[30px]">
           <div className="flex sm:gap-[5px] gap-[2px] items-end">
@@ -38,6 +111,7 @@ const Login = () => {
         <button
           className="w-full h-[40px] flex justify-center items-center bg-black text-white font-shippori
          font-normal text-[14px] uppercase opacity-80 hover:opacity-100 transition-all duration-200 ease-in-out"
+          onClick={handleLogin}
         >
           sign in
         </button>
@@ -87,6 +161,9 @@ const Login = () => {
           </button>
         </Link>
       </div>
+
+      <Alert show={show} title={title} isSuccess={isSuccess} />
+      {showLoading && <Loading />}
     </div>
   );
 };

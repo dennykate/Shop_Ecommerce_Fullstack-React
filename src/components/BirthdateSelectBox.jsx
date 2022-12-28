@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { days, months, years } from "../utils/data";
 
-const BirthdateSelectBox = () => {
+const BirthdateSelectBox = ({ setValue }) => {
+  const [day, setDay] = useState(null);
+  const [month, setMonth] = useState(null);
+  const [year, setYear] = useState(null);
+
+  useEffect(() => {
+    setValue(`${day}/${month}/${year}`);
+  }, [day, month, year]);
+
   return (
     <div className="w-full">
       <h1 className="font-shippori text-black text-sm font-semibold mb-[5px]">
@@ -11,6 +19,7 @@ const BirthdateSelectBox = () => {
         <select
           className="h-[40px] font-shippori text-black text-sm font-semibold bg-[#f1f1f3] px-[3px]
             border-none outline-none"
+          onChange={(e) => setDay(e.target.value)}
         >
           <option value="" selected hidden disabled>
             Day
@@ -25,12 +34,13 @@ const BirthdateSelectBox = () => {
         <select
           className="h-[40px] font-shippori text-black text-sm font-semibold bg-[#f1f1f3] px-[3px]
             border-none outline-none"
+          onChange={(e) => setMonth(e.target.value)}
         >
           <option value="" selected hidden disabled>
             Month
           </option>
           {months.map((month, index) => (
-            <option key={index} value={month}>
+            <option key={index} value={index + 1}>
               {month}
             </option>
           ))}
@@ -39,6 +49,7 @@ const BirthdateSelectBox = () => {
         <select
           className="h-[40px] font-shippori text-black text-sm font-semibold bg-[#f1f1f3] px-[3px]
             border-none outline-none"
+          onChange={(e) => setYear(e.target.value)}
         >
           <option value="" selected hidden disabled>
             Year

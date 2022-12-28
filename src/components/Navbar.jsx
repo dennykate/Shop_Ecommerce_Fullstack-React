@@ -1,14 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiSearch, FiShoppingCart } from "react-icons/fi";
 import { MdPersonOutline } from "react-icons/md";
 import { HiOutlineBars3 } from "react-icons/hi2";
+import { FiLogOut } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
+  const carts = useSelector((state) => state.carts);
   const [showNavbar, setShowNavbar] = useState(false);
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  const checkAuth = () => {
+    const userData = localStorage.getItem("userData");
+
+    setUserData(JSON.parse(userData));
+  };
+
+  const logOut = () => {
+    localStorage.clear();
+
+    checkAuth();
+  };
 
   const handleShowNavbar = () => {
-    console.log("lcikc");
     setShowNavbar(!showNavbar);
   };
 
@@ -58,28 +77,70 @@ const Navbar = () => {
                 Search
               </h1>
             </div>
-            <div className="flex gap-[4px] items-center cursor-pointer">
-              <FiShoppingCart size={13} color="black" />
-              <h1 className="text-black text-xs font-shippori uppercase font-semibold">
-                Cart
-              </h1>
-            </div>
-            <Link to={"/login"}>
-              <div className="flex gap-[4px] items-center cursor-pointer">
-                <MdPersonOutline size={16} color="black" />
+            <Link to="/cart">
+              <div className="flex gap-[4px] items-center cursor-pointer relative">
+                <FiShoppingCart size={13} color="black" />
                 <h1 className="text-black text-xs font-shippori uppercase font-semibold">
-                  Login
+                  Cart
                 </h1>
+
+                {carts.length > 0 && (
+                  <div
+                    className="w-[20px] h-[20px] bg-red-500 rounded-md absolute -top-[16px] -right-[16px] text-white 
+                text-[10px] flex justify-center items-center "
+                  >
+                    {carts.length}
+                  </div>
+                )}
               </div>
             </Link>
+            {userData?.email ? (
+              <div
+                onClick={logOut}
+                className="flex gap-[4px] items-center cursor-pointer"
+              >
+                <FiLogOut size={16} color="black" />
+                <h1 className="text-black text-xs font-shippori uppercase font-semibold">
+                  Logout
+                </h1>
+              </div>
+            ) : (
+              <Link to={"/login"}>
+                <div className="flex gap-[4px] items-center cursor-pointer">
+                  <MdPersonOutline size={16} color="black" />
+                  <h1 className="text-black text-xs font-shippori uppercase font-semibold">
+                    Login
+                  </h1>
+                </div>
+              </Link>
+            )}
           </div>
 
-          <button
-            className="flex items-center justify-center md:hidden"
-            onClick={handleShowNavbar}
-          >
-            <HiOutlineBars3 size={25} color="black" />
-          </button>
+          <div className="flex items-center gap-[20px] md:hidden ">
+            <Link to="/cart">
+              <button
+                className="flex items-center justify-center relative"
+                onClick={handleShowNavbar}
+              >
+                {carts.length > 0 && (
+                  <div
+                    className="absolute -top-[15px] -right-[15px] w-[20px] h-[20px] bg-red-500 flex justify-center 
+                items-center text-white text-xs rounded-md"
+                  >
+                    {carts.length}
+                  </div>
+                )}
+                <FiShoppingCart size={20} color="black" />
+              </button>
+            </Link>
+
+            <button
+              className="flex items-center justify-center "
+              onClick={handleShowNavbar}
+            >
+              <HiOutlineBars3 size={25} color="black" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -89,12 +150,14 @@ const Navbar = () => {
       ${showNavbar ? "translate-y-0" : "-translate-y-[300px]"} z-10`}
       >
         <div className="flex flex-col gap-[25px] sm:items-center items-start w-full">
-          <h1
-            className="text-black font-shippori font-semibold text-sm uppercase cursor-pointer
+          <Link to="/">
+            <h1
+              className="text-black font-shippori font-semibold text-sm uppercase cursor-pointer
           hover:text-black"
-          >
-            Home
-          </h1>
+            >
+              Home
+            </h1>
+          </Link>
           <h1
             className="text-black font-shippori font-semibold text-sm uppercase cursor-pointer
           hover:text-black"
@@ -120,20 +183,23 @@ const Navbar = () => {
                 Search
               </h1>
             </div>
-            <div className="flex gap-[4px] items-center">
-              <FiShoppingCart size={13} color="black" />
-              <h1 className="text-black text-xs font-shippori uppercase font-semibold">
-                Cart
-              </h1>
-            </div>
-            <Link to={"/login"}>
-              <div className="flex gap-[4px] items-center">
-                <MdPersonOutline size={16} color="black" />
+            {userData?.email ? (
+              <button onClick={logOut} className="flex gap-[4px] items-center">
+                <FiLogOut size={16} color="black" />
                 <h1 className="text-black text-xs font-shippori uppercase font-semibold">
-                  Login
+                  LogOut
                 </h1>
-              </div>
-            </Link>
+              </button>
+            ) : (
+              <Link to={"/login"}>
+                <div className="flex gap-[4px] items-center">
+                  <MdPersonOutline size={16} color="black" />
+                  <h1 className="text-black text-xs font-shippori uppercase font-semibold">
+                    Login
+                  </h1>
+                </div>
+              </Link>
+            )}
           </div>
         </div>
       </div>

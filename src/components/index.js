@@ -8,3 +8,6 @@ export { default as Shop } from "./Shop";
 export { default as Award } from "./Award";
 export { default as Footer } from "./Footer";
 export { default as DetailBody } from "./DetailBody";
+export { default as Alert } from "./Alert";
+export { default as Loading } from "./Loading";
+export { default as CartLeft } from "./CartLeft";

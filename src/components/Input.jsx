@@ -1,6 +1,6 @@
 import React from "react";
 
-const Input = ({ className, label, type }) => {
+const Input = ({ className, label, type, value, setValue }) => {
   return (
     <div className={className}>
       <label
@@ -10,10 +10,12 @@ const Input = ({ className, label, type }) => {
         {label}
       </label>
       <input
+        value={value}
         type={type ? "password" : "text"}
         id={label}
-        className="w-full h-[40px] bg-[#f1f1f3] outline-none mt-[5px] px-[10px] text-sm border-[1px] 
+        className="w-full h-[40px] bg-[#f1f1f3] outline-none mt-[5px] sm:px-[10px] px-[5px] text-sm border-[1px] 
         border-black border-opacity-10"
+        onChange={(e) => setValue(e.target.value)}
       />
     </div>
   );

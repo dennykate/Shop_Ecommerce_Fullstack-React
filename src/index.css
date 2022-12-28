@@ -2,3 +2,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.animate-slide-up {
+  animation: slide-up 0.2s linear;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(30px);
+  }
+  to {
+    transform: translateY(0px);
+  }
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+.scrollbar::-webkit-scrollbar-track {
+}
+
+/* Handle */
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #0858f7;
+}
+
+.customPlaceholder::placeholder {
+  font-size: 12px;
+  color: black;
+}

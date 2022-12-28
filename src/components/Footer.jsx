@@ -18,7 +18,7 @@ const Footer = () => {
       border-black border-opacity-10 gap-[30px]"
         >
           {footerData.map(({ title, data }, index) => (
-            <div className="flex md:justify-center justify-start">
+            <div key={index} className="flex md:justify-center justify-start">
               <div
                 key={index}
                 className="flex md:gap-[20px] sm:gap-[15px] gap-[10px] items-start flex-col"

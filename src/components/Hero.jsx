@@ -1,6 +1,5 @@
 import React from "react";
 import { BsArrowRight } from "react-icons/bs";
-import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -18,14 +17,13 @@ const Hero = () => {
             industry.
           </h1>
           <div className="grid gap-[20px] grid-cols-2">
-            <Link to={"/detail"}>
-              <div
-                className="h-[40px] bg-black text-white sm:text-xs text-[10px] font-shippori font-normal uppercase
-            opacity-80 hover:opacity-100 flex justify-center items-center"
-              >
-                buy now
-              </div>
-            </Link>
+            <div
+              className="h-[40px] bg-black text-white sm:text-xs text-[10px] font-shippori font-normal uppercase
+            opacity-80 hover:opacity-100 flex justify-center items-center cursor-pointer"
+            >
+              buy now
+            </div>
+
             <div
               className="flex gap-[5px] items-center text-black font-shippori font-semibold uppercase
             sm:text-xs text-[10px]"
