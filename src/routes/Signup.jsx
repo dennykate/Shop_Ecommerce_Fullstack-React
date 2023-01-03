@@ -49,6 +49,8 @@ const Signup = () => {
       password,
     };
 
+    setShowLoading(true);
+
     const response = await fetch(BASE_URL + "user/signup", {
       method: "POST",
       headers: {
@@ -71,6 +73,7 @@ const Signup = () => {
     setShow(true);
     setTitle("Require All Data");
     setIsSuccess(false);
+    setShowLoading(false);
 
     setTimeout(() => {
       setShow(false);
@@ -82,22 +85,19 @@ const Signup = () => {
     setShow(true);
     setTitle("Signup Success");
     setIsSuccess(true);
-    setShowLoading(true);
+    setShowLoading(false);
 
     setTimeout(() => {
       setShow(false);
-    }, 3000);
-
-    setTimeout(() => {
       navigate("/");
-      setShowLoading(false);
-    }, 3500);
+    }, 1000);
   };
 
   const userAlreadyExists = () => {
     setShow(true);
     setTitle("User Already Exists");
     setIsSuccess(false);
+    setShowLoading(false);
 
     setTimeout(() => {
       setShow(false);

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
+import Loading from "./Loading";
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -16,6 +17,7 @@ const CartRight = ({ showCheckout }) => {
   const [show, setShow] = useState(false);
   const [title, setTitle] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -56,6 +58,8 @@ const CartRight = ({ showCheckout }) => {
   };
 
   const submitOrder = async (order) => {
+    setShowLoading(true);
+
     const response = await fetch(BASE_URL + "cart", {
       method: "POST",
       headers: { "Content-type": "application/json" },
@@ -80,7 +84,8 @@ const CartRight = ({ showCheckout }) => {
       " " +
       date.getDate() +
       "/" +
-      date.getMonth() +
+      parseInt(date.getMonth()) +
+      1 +
       "/" +
       date.getFullYear();
 
@@ -91,6 +96,7 @@ const CartRight = ({ showCheckout }) => {
     setShow(true);
     setTitle("Require All Data");
     setIsSuccess(false);
+    setShowLoading(false);
 
     setTimeout(() => {
       setShow(false);
@@ -101,6 +107,7 @@ const CartRight = ({ showCheckout }) => {
     setShow(true);
     setTitle("Checkout Success");
     setIsSuccess(true);
+    setShowLoading(false);
 
     setInputAddress("");
     setInputNote("");
@@ -118,6 +125,7 @@ const CartRight = ({ showCheckout }) => {
     setShow(true);
     setTitle("Checkout Fail");
     setIsSuccess(false);
+    setShowLoading(false);
 
     setTimeout(() => {
       setShow(false);
@@ -125,133 +133,136 @@ const CartRight = ({ showCheckout }) => {
   };
 
   return (
-    <div
-      className={`md:w-1/3 sm:w-[400px] w-full md:static fixed top-0  bg-[#f1f1f3] h-screen overflow-y-scroll py-[30px] 
+    <>
+      <div
+        className={`md:w-1/3 sm:w-[400px] w-full md:static fixed top-0  bg-[#f1f1f3] h-screen overflow-y-scroll py-[30px] 
     lg:px-[30px] px-[10px] right-0 md:translate-x-0 ${
       showCheckout ? "translate-x-0" : " translate-x-[100%]"
     } transition-all duration-200 ease-in-out scrollbar`}
-    >
-      <div className="w-full min-h-screen">
-        <div
-          className="w-full justify-start items-center py-[20px] flex border-b-[1px] border-gray-700 
+      >
+        <div className="w-full min-h-screen">
+          <div
+            className="w-full justify-start items-center py-[20px] flex border-b-[1px] border-gray-700 
       border-opacity-20 mb-[30px]"
-        >
-          <h1 className="text-lg font-shippori font-extrabold text-black">
-            Order Summary
-          </h1>
-        </div>
+          >
+            <h1 className="text-lg font-shippori font-extrabold text-black">
+              Order Summary
+            </h1>
+          </div>
 
-        <div
-          className="flex flex-col gap-[30px] pb-[30px] border-b-[1px] border-gray-700 
+          <div
+            className="flex flex-col gap-[30px] pb-[30px] border-b-[1px] border-gray-700 
       border-opacity-20"
-        >
-          <div className="flex justify-between items-center">
+          >
+            <div className="flex justify-between items-center">
+              <h1 className="text-xs font-shippori text-black font-bold uppercase">
+                Items {carts.length}
+              </h1>
+              <h1 className="text-xs font-shippori text-black font-bold">
+                ${totalCost}
+              </h1>
+            </div>
+
+            <div className="flex flex-col gap-[15px]">
+              <h1 className="text-xs font-shippori text-black font-bold uppercase">
+                Shipping
+              </h1>
+
+              <select
+                className="w-full h-[35px] px-[5px] border-none outline-none bg-white
+          text-black font-shippori text-sm font-semibold"
+              >
+                <option
+                  value=""
+                  className="text-black font-shippori text-xs font-semibold"
+                >
+                  Cash On Deli - Only
+                </option>
+              </select>
+            </div>
+
+            <div className="flex flex-col gap-[15px]">
+              <h1 className="text-xs font-shippori text-black font-bold uppercase">
+                Address
+              </h1>
+              <input
+                value={inputAddress || ""}
+                onChange={(e) => setInputAddress(e.target.value)}
+                placeholder="Enter Your Address"
+                className="w-full h-[35px] px-[10px] border-none outline-none bg-white
+          text-black font-shippori text-sm font-semibold customPlaceholder"
+              />
+            </div>
+
+            <div className="flex flex-col gap-[15px]">
+              <h1 className="text-xs font-shippori text-black font-bold uppercase">
+                Phone Number
+              </h1>
+              <input
+                value={inputPhNb || ""}
+                onChange={(e) => setInputPhNb(e.target.value)}
+                placeholder="Enter Your Phone Number"
+                className="w-full h-[35px] px-[10px] border-none outline-none bg-white
+          text-black font-shippori text-sm font-semibold customPlaceholder"
+              />
+            </div>
+
+            <div className="flex flex-col gap-[15px]">
+              <h1 className="text-xs font-shippori text-black font-bold uppercase">
+                Note
+              </h1>
+              <textarea
+                value={inputNote || ""}
+                onChange={(e) => setInputNote(e.target.value)}
+                placeholder="Enter Your Note"
+                className="w-full px-[10px] border-none outline-none bg-white
+          text-black font-shippori text-sm font-semibold customPlaceholder py-[5px]"
+                rows={6}
+              />
+            </div>
+
+            <div className="flex flex-col gap-[15px]">
+              <h1 className="text-xs font-shippori text-black font-bold uppercase">
+                Promo Code
+              </h1>
+
+              <input
+                placeholder="Enter Your Code"
+                className="w-full h-[35px] px-[10px] border-none outline-none bg-white
+          text-black font-shippori text-sm font-semibold customPlaceholder"
+              />
+            </div>
+
+            <button
+              className="w-[100px] h-[35px] flex justify-center items-center font-shippori text-white 
+        font-semibold uppercase bg-[#F00000] text-sm"
+            >
+              Apply
+            </button>
+          </div>
+
+          <div className="py-[30px] flex justify-between items-center">
             <h1 className="text-xs font-shippori text-black font-bold uppercase">
-              Items {carts.length}
+              Total Cost
             </h1>
             <h1 className="text-xs font-shippori text-black font-bold">
               ${totalCost}
             </h1>
           </div>
 
-          <div className="flex flex-col gap-[15px]">
-            <h1 className="text-xs font-shippori text-black font-bold uppercase">
-              Shipping
-            </h1>
-
-            <select
-              className="w-full h-[35px] px-[5px] border-none outline-none bg-white
-          text-black font-shippori text-sm font-semibold"
-            >
-              <option
-                value=""
-                className="text-black font-shippori text-xs font-semibold"
-              >
-                Cash On Deli - Only
-              </option>
-            </select>
-          </div>
-
-          <div className="flex flex-col gap-[15px]">
-            <h1 className="text-xs font-shippori text-black font-bold uppercase">
-              Address
-            </h1>
-            <input
-              value={inputAddress || ""}
-              onChange={(e) => setInputAddress(e.target.value)}
-              placeholder="Enter Your Address"
-              className="w-full h-[35px] px-[10px] border-none outline-none bg-white
-          text-black font-shippori text-sm font-semibold customPlaceholder"
-            />
-          </div>
-
-          <div className="flex flex-col gap-[15px]">
-            <h1 className="text-xs font-shippori text-black font-bold uppercase">
-              Phone Number
-            </h1>
-            <input
-              value={inputPhNb || ""}
-              onChange={(e) => setInputPhNb(e.target.value)}
-              placeholder="Enter Your Phone Number"
-              className="w-full h-[35px] px-[10px] border-none outline-none bg-white
-          text-black font-shippori text-sm font-semibold customPlaceholder"
-            />
-          </div>
-
-          <div className="flex flex-col gap-[15px]">
-            <h1 className="text-xs font-shippori text-black font-bold uppercase">
-              Note
-            </h1>
-            <textarea
-              value={inputNote || ""}
-              onChange={(e) => setInputNote(e.target.value)}
-              placeholder="Enter Your Note"
-              className="w-full px-[10px] border-none outline-none bg-white
-          text-black font-shippori text-sm font-semibold customPlaceholder py-[5px]"
-              rows={6}
-            />
-          </div>
-
-          <div className="flex flex-col gap-[15px]">
-            <h1 className="text-xs font-shippori text-black font-bold uppercase">
-              Promo Code
-            </h1>
-
-            <input
-              placeholder="Enter Your Code"
-              className="w-full h-[35px] px-[10px] border-none outline-none bg-white
-          text-black font-shippori text-sm font-semibold customPlaceholder"
-            />
-          </div>
-
           <button
-            className="w-[100px] h-[35px] flex justify-center items-center font-shippori text-white 
-        font-semibold uppercase bg-[#F00000] text-sm"
+            onClick={checkoutOrder}
+            className="w-full h-[35px] flex justify-center items-center font-shippori text-white 
+        font-bold uppercase bg-[#009FFF] text-sm"
           >
-            Apply
+            Checkout
           </button>
         </div>
-
-        <div className="py-[30px] flex justify-between items-center">
-          <h1 className="text-xs font-shippori text-black font-bold uppercase">
-            Total Cost
-          </h1>
-          <h1 className="text-xs font-shippori text-black font-bold">
-            ${totalCost}
-          </h1>
-        </div>
-
-        <button
-          onClick={checkoutOrder}
-          className="w-full h-[35px] flex justify-center items-center font-shippori text-white 
-        font-bold uppercase bg-[#009FFF] text-sm"
-        >
-          Checkout
-        </button>
       </div>
 
       <Alert show={show} title={title} isSuccess={isSuccess} />
-    </div>
+      {showLoading && <Loading />}
+    </>
   );
 };
 

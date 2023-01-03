@@ -23,6 +23,8 @@ const Login = () => {
     }
     const body = { email: email, password: password };
 
+    setShowLoading(true);
+
     const response = await fetch(BASE_URL + "user/login", {
       method: "POST",
       headers: {
@@ -43,6 +45,7 @@ const Login = () => {
     setShow(true);
     setTitle("Login Fail");
     setIsSuccess(false);
+    setShowLoading(false);
 
     setTimeout(() => {
       setShow(false);
@@ -54,16 +57,12 @@ const Login = () => {
     setShow(true);
     setTitle("Login Success");
     setIsSuccess(true);
-    setShowLoading(true);
+    setShowLoading(false);
 
     setTimeout(() => {
       setShow(false);
-    }, 3000);
-
-    setTimeout(() => {
       navigate("/");
-      setShowLoading(false);
-    }, 3500);
+    }, 1000);
   };
 
   return (

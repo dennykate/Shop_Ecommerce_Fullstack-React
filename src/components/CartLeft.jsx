@@ -22,7 +22,7 @@ const CartLeft = () => {
             <HiDocumentText size={28} className="text-red-600" />
           </Link>
           <h1 className="sm:text-lg text-base font-shippori font-extrabold text-black">
-            {carts.length > 0 && carts.length + " Items"}
+            {carts.length > 0 && carts.length + " Item(s)"}
           </h1>
         </div>
       </div>
