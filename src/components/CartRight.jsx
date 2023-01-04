@@ -138,7 +138,7 @@ const CartRight = ({ showCheckout }) => {
         className={`md:w-1/3 sm:w-[400px] w-full md:static fixed top-0  bg-[#f1f1f3] h-screen overflow-y-scroll py-[30px] 
     lg:px-[30px] px-[10px] right-0 md:translate-x-0 ${
       showCheckout ? "translate-x-0" : " translate-x-[100%]"
-    } transition-all duration-200 ease-in-out scrollbar`}
+    } transition-all duration-200 ease-in-out scrollbar md:pb-[30px] pb-[100px]`}
       >
         <div className="w-full min-h-screen">
           <div
